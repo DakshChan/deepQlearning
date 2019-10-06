@@ -17,7 +17,7 @@ class DQNAgent:
         self.memory = deque(maxlen=2000)
         self.gamma = 0.1 # discount rate
         self.gamma_max = 0.995
-        self.gamma_rise = 1.005
+        self.gamma_rise = 0.002
         self.epsilon = 1.2  # exploration rate
         self.epsilon_min = 0.05
         self.epsilon_decay = 0.998
@@ -71,8 +71,10 @@ class DQNAgent:
             self.model.fit(state, target, epochs=1, verbose=0)
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
+            if self.epsilon < self.epsilon_min:
+                self.epsilon = self.epsilon_min
         if self.gamma < self.gamma_max:
-            self.gamma *= self.gamma_rise
+            self.gamma += self.gamma_rise
             if self.gamma > self.gamma_max:
                 self.gamma = self.gamma_max
     def load(self, name):
@@ -116,6 +118,6 @@ if __name__ == "__main__":
                 break
             if len(agent.memory) > batch_size:
                 agent.replay(batch_size)
-        #this saves every 20 episodes
-        if e % 20 == 0:
+        #this saves every 10 episodes
+        if e % 10 == 0:
             agent.save("./save/cartpole-ddqn-EP"+str(e)+".h5")
