@@ -100,7 +100,7 @@ if __name__ == "__main__":
         state = np.reshape(state, [1, state_size])
         time = 0  # time is used just to count frames as a measurement of how long the ai lasted
         while True:
-            # env.render()
+            env.render()
             time += 1
             action = agent.act(state)
             next_state, reward, done, _ = env.step(action)
